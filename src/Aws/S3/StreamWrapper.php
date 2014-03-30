@@ -350,7 +350,7 @@ class StreamWrapper
                     'MaxKeys' => 1
                 ));
                 if (!$result['Contents'] && !$result['CommonPrefixes']) {
-                    return $this->triggerError("File or directory not found: {$path}", $flags);
+                    return false;
                 }
                 // This is a directory prefix
                 return $this->formatUrlStat($path);
@@ -405,7 +405,11 @@ class StreamWrapper
         }
 
         try {
-            self::$client->deleteBucket(array('Bucket' => $params['Bucket']));
+            if ($params['Key']) {
+                $this->unlink($params['Key']);
+            } else {
+                self::$client->deleteBucket(array('Bucket' => $params['Bucket']));
+            }
             $this->clearStatInfo($path);
             return true;
         } catch (\Exception $e) {
