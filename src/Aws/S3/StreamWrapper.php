@@ -406,7 +406,7 @@ class StreamWrapper
 
         try {
             if ($params['Key']) {
-                $this->unlink($params['Key']);
+                return $this->unlink($params['Key']);
             } else {
                 self::$client->deleteBucket(array('Bucket' => $params['Bucket']));
             }
